@@ -1,14 +1,27 @@
 import { expect, Page } from "@playwright/test";
 import PlaywrightWrapper from "../helper/wrapper/PlaywrightWrappers";
 
+/**
+ * RegisterPage class encapsulates actions and verifications related to the user registration page of the application.
+ * 
+ * @author med-aziz-guennichi
+ */
 export default class RegisterPage {
 
   private readonly base: PlaywrightWrapper;
 
+  /**
+   * Initializes the RegisterPage with the provided Playwright Page instance.
+   * 
+   * @param {Page} page - The Playwright Page instance for interacting with the browser.
+   */
   constructor(private readonly page: Page) {
     this.base = new PlaywrightWrapper(page);
   }
 
+  /**
+   * Stores the selectors for elements on the registration page.
+   */
   private readonly Elements = {
     fName: "input[formcontrolname='firstname']",
     lname: "input[formcontrolname='lastname']",
@@ -22,14 +35,27 @@ export default class RegisterPage {
     regBtn: "button[color='primary']"
   }
 
-  async navigateToRegisterPage() {
-    await this.base.goto("https://bookcart.azurewebsites.net/register")
+  /**
+   * Navigates to the registration page of the application.
+   * 
+   * @returns {Promise<void>} Resolves when the registration page is successfully loaded.
+   */
+  async navigateToRegisterPage(): Promise<void> {
+    await this.base.goto("https://bookcart.azurewebsites.net/register");
   }
 
-
-  async registerUser(firstname: string, lastname: string, userName: string,
-    password: string, confirmPassword: string,
-    gender: string) {
+  /**
+   * Registers a new user with the provided details.
+   * 
+   * @param {string} firstname - The user's first name.
+   * @param {string} lastname - The user's last name.
+   * @param {string} userName - The user's unique username.
+   * @param {string} password - The user's password.
+   * @param {string} confirmPassword - The confirmation of the user's password.
+   * @param {string} gender - The user's gender, either 'm' for male or 'f' for female.
+   * @returns {Promise<void>} Resolves when the user registration is completed.
+   */
+  async registerUser(firstname: string, lastname: string, userName: string, password: string, confirmPassword: string, gender: string): Promise<void> {
     await this.page.type(this.Elements.fName, firstname);
     await this.page.type(this.Elements.lname, lastname);
     // this must be unique always
@@ -47,16 +73,21 @@ export default class RegisterPage {
     await regBtn.click();
   }
 
-  async enterUsername(userName: string) {
+  /**
+   * Enters the provided username into the username input field and verifies if the username is unique.
+   * 
+   * @param {string} userName - The username to enter and verify.
+   * @returns {Promise<void>} Resolves when the username is successfully entered and validated.
+   */
+  async enterUsername(userName: string): Promise<void> {
     await this.page.type(this.Elements.userName, userName);
     const [response] = await Promise.all([
       this.page.waitForResponse(res => {
         return res.status() == 200
           &&
-          res.url() == `https://bookcart.azurewebsites.net/api/user/validateUserName/${userName}`
+          res.url() == `https://bookcart.azurewebsites.net/api/user/validateUserName/${userName}`;
       })
     ]);
     await response.finished();
   }
 }
-
