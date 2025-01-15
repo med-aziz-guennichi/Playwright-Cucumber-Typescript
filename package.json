@@ -1,7 +1,7 @@
 {
-  "name": "play-ts-cucumber",
+  "name": "playwright-ts-cucumber",
   "version": "1.0.0",
-  "description": "Playwright Cucumber TS framework",
+  "description": "Playwright Cucumber TS",
   "main": "index.js",
   "scripts": {
     "debug": "cross-env ENV=prod PWDEBUG=1 DEBUG=pw:api cucumber-js --config=config/cucumber.js",
